@@ -1,5 +1,5 @@
-const dns = require('node:dns');
-dns.setServers(['1.1.1.1', '1.0.0.1']); 
+const dns = require("node:dns");
+dns.setServers(["1.1.1.1", "1.0.0.1"]);
 
 const express = require("express");
 const dontenv = require("dotenv");
@@ -32,8 +32,31 @@ async function run() {
   try {
     await client.connect();
     const db = client.db("tech-bazaar");
+    const subscriptionsCollection = db.collection("subscriptions");
+    const userCollection = db.collection("user");
 
- 
+    app.post("/subscription", async (req, res) => {
+      const { sessionId, userId, priceId } = req.body;
+
+      const isExist = await subscriptionsCollection.findOne({sessionId})
+      if(isExist){
+        return res.json({msg: "Already exist!"})
+      }
+
+      await subscriptionsCollection.insertOne({
+        sessionId,
+        userId,
+        priceId,
+      });
+
+      //update user role
+      await userCollection.updateOne(
+        { _id: new ObjectId(userId) },
+        { $set: { plan: "pro" } },
+      );
+
+      res.json({ msg: "Payment successfull!" });
+    });
 
     await client.db("admin").command({ ping: 1 });
     console.log(
