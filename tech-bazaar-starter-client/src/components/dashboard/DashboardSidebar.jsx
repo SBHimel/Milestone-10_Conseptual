@@ -6,6 +6,7 @@ import { Button, Drawer } from "@heroui/react";
 import { ChartArea, User2 } from "lucide-react";
 import { headers } from "next/headers";
 import Image from "next/image";
+import Link from "next/link";
 import { BiMoney } from "react-icons/bi";
 import { TbAsset } from "react-icons/tb";
 
@@ -76,7 +77,8 @@ export default async function DashboardSidebar() {
 
 
                 {navItems.map((item) => (
-                    <button
+                    <Link key={item.label} href={item.link}>
+                        <button
                         key={item.label}
                         className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
                         type="button"
@@ -84,6 +86,8 @@ export default async function DashboardSidebar() {
                         <item.icon className="size-5 text-muted" />
                         {item.label}
                     </button>
+                    </Link>
+                    
                 ))}
             </nav>
 
@@ -97,14 +101,16 @@ export default async function DashboardSidebar() {
                         <Drawer.Body>
                             <nav className="flex flex-col gap-1">
                                 {navItems.map((item) => (
+                                    <Link key={item.label} href={item.link}>
                                     <button
-                                        key={item.label}
+                                        
                                         className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
                                         type="button"
                                     >
                                         <item.icon className="size-5 text-muted" />
                                         {item.label}
                                     </button>
+                                    </Link>
                                 ))}
                             </nav>
                         </Drawer.Body>
